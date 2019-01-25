@@ -6,7 +6,10 @@ import argparse
 from bs4 import BeautifulSoup
 import tensorflow as tf
 
-sys.path.append('/tensorflow/models/research')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(os.path.join(parent_dir, 'models'))
+
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 

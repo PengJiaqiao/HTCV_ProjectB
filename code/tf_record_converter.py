@@ -6,7 +6,6 @@ import argparse
 from bs4 import BeautifulSoup
 import tensorflow as tf
 
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(os.path.join(parent_dir, 'models', 'research'))
@@ -27,12 +26,12 @@ def is_valid_bbox(bbox):
 	return True
 
 class TFRecordBuilder():
-    def __init__(self, images_dir, labels_dir, label_map_file, output_file):
+	def __init__(self, images_dir, labels_dir, label_map_file, output_file):
 		self.image_format = b'jpeg'
-        self.images_dir = images_dir
-        self.labels_dir = labels_dir
-        self.label_map_dict = label_map_util.get_label_map_dict(label_map_file)
-    	self.output_file = output_file
+		self.images_dir = images_dir
+		self.labels_dir = labels_dir
+		self.label_map_dict = label_map_util.get_label_map_dict(label_map_file)
+		self.output_file = output_file
 		self.all_labels = [file for file in os.listdir(self.labels_dir) if os.path.splitext(file)[1] in '.xml']
 
 		if len(self.all_labels) == 0:
@@ -44,7 +43,7 @@ class TFRecordBuilder():
 		self.width = int(xml_file.size.width.text)
 		self.height = int(xml_file.size.height.text)
 
-    def _extract_detections(self, label_file):
+	def _extract_detections(self, label_file):
 		output = dict(class_names=[], bboxes=[])
 
 		detections = label_file.find_all('object') 
@@ -60,7 +59,7 @@ class TFRecordBuilder():
 
 			bbox = (xmin_norm, ymin_norm, xmax_norm, ymax_norm)
 			if class_name not in self.label_map_dict or \
-			   not is_valid_bbox(bbox):
+				not is_valid_bbox(bbox):
 				continue
 
 			output['class_names'].append(class_name.encode("utf8"))
@@ -72,7 +71,7 @@ class TFRecordBuilder():
 		preprocessed_labels = []
 
 		for xml_file in self.all_labels:
-			with open(os.path.join(labels_dir, xml_file)) as f:
+			with open(os.path.join(self.labels_dir, xml_file)) as f:
 				xml_file_soup = BeautifulSoup(f, 'xml')
 				
 			current = dict()
@@ -90,11 +89,11 @@ class TFRecordBuilder():
 			current['ymin'] = [elem for elem in detections['bboxes'][2]]
 			current['ymax'] = [elem for elem in detections['bboxes'][3]]
 
-			with tf.gfile.GFile(os.path.join(images_dir, img_name), 'rb') as fid:
+			with tf.gfile.GFile(os.path.join(self.images_dir, current['filename']), 'rb') as fid:
 				current['encoded'] = fid.read()
 
 			preprocessed_labels.append(current)
-	
+
 		return preprocessed_labels
 
 	def _generate_single_record(self, preprocessed_label):
@@ -117,9 +116,8 @@ class TFRecordBuilder():
 
 	def build(self):
 		writer = tf.python_io.TFRecordWriter(self.output_file)
-		self.preprocessed_labels = self._build_intermediate()
-
-		for elem in preprocessed_labels:
+		
+		for elem in self._build_intermediate():
 			record = self._generate_single_record(elem)
 			writer.write(record.SerializeToString())
 
@@ -127,22 +125,22 @@ class TFRecordBuilder():
 
 def main():
 	parser = argparse.ArgumentParser()
-
-	parser.add_argument('-id', '--image_dir', help="The directory that contains the images.")
-	parser.add_argument('-ld', '--label_dir', help="The directory that contains the labels.")
-	parser.add_argument('-l', '--label_map', help="The path to a label map file.")
-	parser.add_argument('-o', '--output', help="Name of the file, where data will be stored.")
+	requiredNamed = parser.add_argument_group('required named arguments')
+	requiredNamed.add_argument('-id', '--image_dir', help="The directory that contains the images.", required=True)
+	requiredNamed.add_argument('-ld', '--label_dir', help="The directory that contains the labels.", required=True)
+	requiredNamed.add_argument('-l', '--label_map', help="The path to a label map file.", required=True)
+	requiredNamed.add_argument('-o', '--output', help="Name of the file, where data will be stored.", required=True)
 
 	args = parser.parse_args()
 
 	if not os.path.isdir(args.image_dir):
-		raise ValueError('No such directory: {}'.format(image_dir))
+		raise ValueError('No such directory: {}'.format(args.image_dir))
 	
 	if not os.path.isdir(args.label_dir):
-		raise ValueError('No such directory: {}'.format(label_dir))
+		raise ValueError('No such directory: {}'.format(args.label_dir))
 
 	if not os.path.isfile(args.label_map):
-		raise ValueError('No such file: {}'.format(label_map))
+		raise ValueError('No such file: {}'.format(args.label_map))
 
 	TFRecordBuilder(args.image_dir, args.label_dir, args.label_map, args.output).build()
 

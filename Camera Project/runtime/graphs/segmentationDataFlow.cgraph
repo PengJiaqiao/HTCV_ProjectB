@@ -1,0 +1,62 @@
+Graph (unnamed
+  Station (source/player player
+    {
+      filename = "D:/Users/rudhi/Documents/Hella_Aglaia/WS1819/Devel/Sandbox/demoVideos/PMD_Example_right.avi";
+    }
+  )
+  Station (view/img img
+    {
+      styleSettings = 
+      {
+        Range = cDblRange(0., 255.);
+        Gamma = 1.;
+        Brightness = 1.;
+        Hue = 1.;
+        Saturation = 1.;
+        Red = 1.;
+        Green = 1.;
+        Blue = 1.;
+        AutoRange = 
+        {
+          Use = false;
+          BufferSize = 1;
+          Quantil = 0.;
+          BorderLeft = 0;
+          BorderTop = 0;
+          BorderRight = 0;
+          BorderBottom = 0;
+        }
+      }
+    }
+  )
+  Station (camera/Segmentation Segmentation)
+  Station (view/img img#1
+    {
+      styleSettings = 
+      {
+        Range = cDblRange(0., 255.);
+        Gamma = 1.;
+        Brightness = 1.;
+        Hue = 1.;
+        Saturation = 1.;
+        Red = 1.;
+        Green = 1.;
+        Blue = 1.;
+        AutoRange = 
+        {
+          Use = false;
+          BufferSize = 1;
+          Quantil = 0.;
+          BorderLeft = 0;
+          BorderTop = 0;
+          BorderRight = 0;
+          BorderBottom = 0;
+        }
+      }
+    }
+  )
+
+  Channel (player.video_img -> img.img)
+  Channel (img.img -> Segmentation.image_in)
+  Channel (Segmentation.image_seg -> img#1.img)
+)

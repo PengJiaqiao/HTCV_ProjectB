@@ -1,0 +1,77 @@
+Graph (unnamed
+  Station (source/player player
+    {
+      filename = "C:/Users/aravi/Documents/Hella_Aglaia/WS1819/Devel/Sandbox/demoVideos/PMD_Example_left.avi";
+    }
+  )
+  Station (view/img img
+    {
+      styleSettings = 
+      {
+        Range = cDblRange(0., 255.);
+        Gamma = 1.;
+        Brightness = 1.;
+        Hue = 1.;
+        Saturation = 1.;
+        Red = 1.;
+        Green = 1.;
+        Blue = 1.;
+        AutoRange = 
+        {
+          Use = false;
+          BufferSize = 1;
+          Quantil = 0.;
+          BorderLeft = 0;
+          BorderTop = 0;
+          BorderRight = 0;
+          BorderBottom = 0;
+        }
+      }
+    }
+  )
+  Station (opencv/miscellaneous/loadInternalCameraParameter loadInternalCameraParameter
+    {
+      fileName = "C:\Users\aravi\Documents\Hella_Aglaia\WS1819\Devel\VEFramework\runtime\calib\Camera\SVLeft.cfg";
+    }
+  )
+  Station (opencv/imgproc/geometric/initUndistortRectifyMap initUndistortRectifyMap)
+  Station (opencv/imgproc/geometric/remap remap
+    {
+      enabled = false;
+    }
+  )
+  Station (view/img img#1
+    {
+      styleSettings = 
+      {
+        Range = cDblRange(0., 255.);
+        Gamma = 1.;
+        Brightness = 1.;
+        Hue = 1.;
+        Saturation = 1.;
+        Red = 1.;
+        Green = 1.;
+        Blue = 1.;
+        AutoRange = 
+        {
+          Use = false;
+          BufferSize = 1;
+          Quantil = 0.;
+          BorderLeft = 0;
+          BorderTop = 0;
+          BorderRight = 0;
+          BorderBottom = 0;
+        }
+      }
+    }
+  )
+
+  Channel (player.video_img -> img.img)
+  Channel (initUndistortRectifyMap.map1 -> remap.mapX)
+  Channel (initUndistortRectifyMap.map2 -> remap.mapY)
+  Channel (loadInternalCameraParameter.cameraMatrix -> initUndistortRectifyMap.cameraMatrix)
+  Channel (loadInternalCameraParameter.distCoeffs -> initUndistortRectifyMap.distCoeffs)
+  Channel (loadInternalCameraParameter.imageSize -> initUndistortRectifyMap.imageSize)
+  Channel (img.img -> loadInternalCameraParameter.img)
+  Channel (img.img -> img#1.img)
+)

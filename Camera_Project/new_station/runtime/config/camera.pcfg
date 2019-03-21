@@ -1,0 +1,6 @@
+{
+    name = "Camera";
+    binary = ["camera"]
+    description = "Cassandra Stations used for Camera";
+    author = "Hella Aglaia Mobile Vision GmbH";
+}

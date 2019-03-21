@@ -7,8 +7,8 @@ The main challenge of the project is to deal with the characteristics of differe
 
 ### Participants list
 #### Camera group
-[Lei Kang]()  
+[Lei Kang](https://github.com/kangleigithub)  
 [Jiaqiao Peng](https://github.com/PengJiaqiao)  
-[Furkan Kilicaslan]()  
+[Furkan Kilicaslan](https://github.com/Klcsln)  
 [Rudhishna Narayanan Nair](https://github.com/rudhi31)  
 [Daniel Sharkov](https://github.com/dsharkovv)  

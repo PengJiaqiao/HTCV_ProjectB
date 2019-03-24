@@ -14,19 +14,19 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
-//#include "veBaseTypes/Calibration/veIntrinsicCalibration.h"
-//#include "veBaseTypes/Types/veCamera.h"
+#include "veBaseTypes/Calibration/veIntrinsicCalibration.h"
+#include "veBaseTypes/Types/veCamera.h"
 #include "cbl/c2DPoint.h"
 
 using namespace cv;
 using namespace dnn;
 using namespace std;
 
-class Segmentation : public cStation
+class ObjDetection : public cStation
 {
-	STATIONDECL(Segmentation);
-	Segmentation();
-	virtual ~Segmentation();
+	STATIONDECL(ObjDetection);
+	ObjDetection();
+	virtual ~ObjDetection();
 	void callback(cBufferT<cImg> *i_buffer);
 	//	virtual void initialize(const cMapObj &i_params);
 	//	virtual void start(StartReasons i_reasons);
@@ -36,7 +36,7 @@ class Segmentation : public cStation
 
 	PORT(cImg) m_ipImage;
 	cOPort<cImg> m_opImage;
-	cOPort<float64> m_opData;
+	cOPort<c3DPoint<float64>> m_opData;
 	vector<string> classes;
 	Net net;
 };
